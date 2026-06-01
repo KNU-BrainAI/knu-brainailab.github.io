@@ -17,4 +17,4 @@ Our research spans three primary areas:
 
 - **Physical AI** – We design intelligent systems that perceive, reason, and act in the physical world. This involves embodied AI, robot learning, and multi-sensory processing for real-world manipulation and human-AI interaction.
 
-To promote open research and collaboration, we maintain a [GitHub organization](https://github.com/KNU-BrainAI) that shares our code, projects, and lab resources. For more details on our ongoing work, visit our [Research page](https://knu-brainai.github.io/research).
+To promote open research and collaboration, we maintain a [GitHub organization](https://github.com/KNU-BrainAI) that shares our code, projects, and lab resources. For more details on our ongoing work, visit our [Research page](https://knu-brainailab.github.io/research).
