@@ -1,8 +1,0 @@
-{
-  "name": "notion-sync",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "@notionhq/client": "^2.2.0"
-  }
-}
