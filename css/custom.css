@@ -1,0 +1,882 @@
+/* ===== Brand Key Colors (shared across light/dark) =====
+   Source: lab brand guideline (CMYK).
+   --key-blue-1: C100 M72 Y0 K18 — darkest, primary key color
+   --key-blue-2: C91  M43 Y0 K0  — secondary blue
+   --key-blue-3: C72  M0  Y0 K0  — lightest sky
+*/
+:root {
+  --key-blue-1: #003BD1;
+  --key-blue-1-rgb: 0, 59, 209;
+  --key-blue-2: #1791FF;
+  --key-blue-2-rgb: 23, 145, 255;
+  --key-blue-3: #47FFFF;
+  --key-blue-3-rgb: 71, 255, 255;
+}
+
+/* Semantic blues: blue text and blue decoration accents swap between
+   themes so contrast reads naturally in both modes.
+     Light mode → text = darkest, accent = secondary
+     Dark mode  → text = secondary, accent = darkest
+*/
+:root,
+[data-bs-theme="light"] {
+  --color-text-blue: var(--key-blue-1);
+  --color-accent-blue: var(--key-blue-2);
+}
+
+[data-bs-theme="dark"] {
+  --color-text-blue: var(--key-blue-2);
+  --color-accent-blue: var(--key-blue-1);
+}
+
+/* ===== Theme Colors (Light) ===== */
+:root,
+[data-bs-theme="light"] {
+  --navbar-bg: rgba(255, 255, 255, 0.95);
+  --navbar-border: rgba(0, 0, 0, 0.08);
+  --footer-bg: #f8f9fa;
+  --footer-border: #e9ecef;
+  --card-hover-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --section-border: #e9ecef;
+  --pub-highlight-bg: #f8f9fa;
+}
+
+/* ===== Theme Colors (Dark) ===== */
+[data-bs-theme="dark"] {
+  --navbar-bg: rgba(33, 37, 41, 0.95);
+  --navbar-border: rgba(255, 255, 255, 0.08);
+  --footer-bg: #1a1d21;
+  --footer-border: #2c3034;
+  --card-hover-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --section-border: #2c3034;
+  --pub-highlight-bg: #2c3034;
+}
+
+/* ===== Typography ===== */
+body {
+  font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  padding-top: 80px;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ===== Layout ===== */
+.container {
+  max-width: 1100px;
+}
+
+.main-content {
+  min-height: calc(100vh - 200px);
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+/* ===== Smooth scroll ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===== Navbar ===== */
+#main-navbar {
+  background-color: var(--navbar-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--navbar-border);
+  transition: all 0.3s ease;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  z-index: 1030;
+}
+
+#main-navbar.navbar-shrink {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+#main-navbar.navbar-shrink .navbar-brand {
+  font-size: 1.05rem;
+}
+
+/* Safari fallback: solid background when backdrop-filter unsupported */
+@supports not (backdrop-filter: blur(10px)) {
+  #main-navbar {
+    background-color: #ffffff;
+  }
+  [data-bs-theme="dark"] #main-navbar {
+    background-color: #212529;
+  }
+}
+
+#main-navbar .navbar-brand {
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+/* DGIST logo placed inline after "IRS Lab @" in the navbar brand.
+   Sized at 1.28em (-5% from 1.35em) and pulled left by ~¼ character
+   (margin-left: -0.1em ≈ 0.15em previous spacing − 0.25em shift) to
+   tighten the gap between "@" and the logo. */
+#main-navbar .navbar-logo {
+  height: 1.28em;
+  width: auto;
+  margin: 0 0 0 -0.1em;
+  padding: 0;
+  border-radius: 0;
+  vertical-align: -0.22em;
+}
+
+/* "IRS Lab" wrapped in its own span so the rapid-refresh easter egg
+   can wobble it independently of the DGIST logo on the other side. */
+#main-navbar .brand-left {
+  display: inline-block;
+  transform-origin: center bottom;
+}
+
+/* Home-click easter egg: triggered by adding .brand-wobble to <html>
+   (see js/home-egg.js). "IRS Lab" and the DGIST logo wobble in sync
+   while the "@" between them is plain inline text and stays still. */
+.brand-wobble #main-navbar .brand-left,
+.brand-wobble #main-navbar .navbar-logo {
+  animation: brand-wobble 1.6s ease-in-out 1;
+  transform-origin: center bottom;
+}
+
+/* Quarter-amplitude wobble (halved twice from the original demo). */
+@keyframes brand-wobble {
+  0%   { transform: rotate(0deg);     }
+  15%  { transform: rotate(-1.75deg); }
+  30%  { transform: rotate(1.25deg);  }
+  45%  { transform: rotate(-1deg);    }
+  60%  { transform: rotate(0.75deg);  }
+  78%  { transform: rotate(-0.5deg);  }
+  100% { transform: rotate(0deg);     }
+}
+
+/* When the brand-link easter egg replaces "@" with a random emoji,
+   only that emoji wobbles — the surrounding "IRS Lab" text and DGIST
+   logo stay still (the brand-wide wobble is reserved for the Home
+   nav-link path). */
+#main-navbar .brand-emoji-wobble {
+  display: inline-block;
+  transform-origin: center bottom;
+  animation: brand-wobble 1.6s ease-in-out 1;
+}
+
+/* Whole-brand tremor for the rapid-click follow-up egg (3+ Home clicks
+   within 3 seconds while on the home page). Each rapid click restarts
+   the animation, so spamming it produces a sustained "부르르" feel. */
+.brand-vibrate {
+  animation: brand-vibrate 0.6s linear 1;
+}
+
+@keyframes brand-vibrate {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-1.5px,  1.5px); }
+  20%  { transform: translate( 1.5px, -1.5px); }
+  30%  { transform: translate(-1.5px, -1px);   }
+  40%  { transform: translate( 1.5px,  1px);   }
+  50%  { transform: translate(-1px,    1.5px); }
+  60%  { transform: translate( 1px,   -1.5px); }
+  70%  { transform: translate(-1px,   -1px);   }
+  80%  { transform: translate( 1px,    1px);   }
+  90%  { transform: translate(-0.5px,  0.5px); }
+  100% { transform: translate(0, 0); }
+}
+
+#main-navbar .nav-link {
+  font-weight: 500;
+  font-size: 0.92rem;
+  padding: 0.5rem 0.85rem;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+/* Underline grows from center outward via scaleX, sized to the text
+   plus ~1 character of breathing room on each side (so it doesn't
+   feel too cramped against the text edges). */
+#main-navbar .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 0.7rem;
+  right: 0.7rem;
+  height: 2px;
+  background-color: var(--color-accent-blue);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+#main-navbar .nav-link:hover::after,
+#main-navbar .nav-link:focus::after {
+  transform: scaleX(1);
+}
+
+.theme-toggle-btn,
+#search-toggle {
+  font-size: 1.05rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.theme-toggle-btn:hover,
+#search-toggle:hover {
+  opacity: 1;
+}
+
+/* Mobile theme toggle next to the hamburger: shrunk to ~2/3 of the
+   menu-button size so it doesn't outweigh the hamburger. Nudged
+   1em right and 0.25em down for visual alignment. */
+#theme-toggle-mobile {
+  /* Bootstrap's button padding is in rem, so changing font-size alone
+     only shrunk the glyph, not the visible box. Use transform:scale
+     instead so the entire button (icon + padding + halo) actually
+     shrinks together. */
+  position: relative;
+  left: 1.25em;
+  top: 0.125em;
+  transform: scale(0.8);
+  transform-origin: right center;
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  background-color: var(--footer-bg);
+  border-top: 1px solid var(--footer-border);
+  font-size: 0.9rem;
+}
+
+/* ===== Images ===== */
+img {
+  margin-bottom: 16px;
+  margin-top: 12px;
+  border-radius: 6px;
+}
+
+/* ===== Carousel ===== */
+.carousel {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Home carousel only: white padding so the slide indicators sit
+   under (not over) the image. Bottom is taller than top so the
+   indicator dots have room. Scoped to #carousel so the gallery
+   carousels keep their original Bootstrap framing. */
+#carousel {
+  background-color: #fff;
+  padding: 1.125rem 0 2.25rem;
+}
+
+#carousel .carousel-indicators {
+  bottom: 0.4rem;
+  margin-bottom: 0;
+}
+
+#carousel .carousel-indicators [data-bs-target] {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.carousel-item img {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* AOS fade-up: shorten travel distance so entrance matches the
+   publication "All" button transition (translateY 15px instead of
+   AOS's default 100px). Combined with AOS.init({duration: 400,
+   easing: 'ease'}) this unifies all body-content entry animations. */
+[data-aos="fade-up"] {
+  transform: translate3d(0, 15px, 0);
+}
+
+/* AOS fade-left (used by home News list): keep the entry close to its
+   final position. AOS default is 100px; tuned down to 25px after iteration. */
+[data-aos="fade-left"] {
+  transform: translate3d(25px, 0, 0);
+}
+
+/* Home carousel arrows: keep them visible on light theme.
+   Bootstrap renders white SVG icons by default which disappear on
+   bright photo regions, so add a dark halo on light mode. In dark
+   mode, invert the icon (white → black) and use a light halo, so
+   the arrows feel theme-appropriate (darker) and stay readable. */
+#carousel .carousel-control-prev-icon,
+#carousel .carousel-control-next-icon {
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.7));
+}
+
+[data-bs-theme="dark"] #carousel .carousel-control-prev-icon,
+[data-bs-theme="dark"] #carousel .carousel-control-next-icon {
+  filter: invert(1) drop-shadow(0 0 6px rgba(255, 255, 255, 0.55));
+}
+
+/* Halve the button track width (15% → 7.5%) so the arrow icon sits
+   half as far from the outer edge of the carousel. */
+#carousel .carousel-control-prev,
+#carousel .carousel-control-next {
+  width: 7.5%;
+}
+
+/* ===== Page main title (unified across all tabs) =====
+   Home's <h1> is rendered inside #homeid by homelay.html. Other pages
+   render their first heading (h1 or h2) at the top of their .col-12
+   wrapper. Match all of them to the same size for visual consistency. */
+#homeid h1,
+.main-content > .row > .col-12 > h1:first-child,
+.main-content > .row > .col-12 > h2:first-child {
+  font-size: 1.65rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* Sub-section headings (e.g., "International Publications" h3 in
+   publications.md). Sized below the page main title so the hierarchy
+   reads correctly. */
+.main-content h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#homeid img {
+  margin: 0;
+  border-radius: 0;
+}
+
+/* ===== Cards ===== */
+.card {
+  border: 1px solid var(--section-border);
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-3px);
+}
+
+.notice-card {
+  border-left: 4px solid var(--color-accent-blue);
+}
+
+.news-card .list-unstyled li {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--section-border);
+  font-size: 0.95rem;
+}
+
+.news-card .list-unstyled li:last-child {
+  border-bottom: none;
+}
+
+/* ===== Team Grid ===== */
+#gridid img {
+  margin: 12px 16px 6px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#gridid .row {
+  margin-bottom: 4px;
+}
+
+#gridid .list-group-item {
+  border: 1px solid var(--section-border);
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  background: transparent;
+}
+
+#gridid .list-group-item:hover {
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-4px);
+  text-decoration: none;
+}
+
+/* ===== Publications ===== */
+.pub-entry {
+  padding: 1rem 0.75rem;
+  margin: 0 -0.75rem;
+  border-bottom: 1px solid var(--section-border);
+  border-radius: 8px;
+  position: relative;
+  transition: opacity 0.3s ease, max-height 0.3s ease,
+              box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.pub-entry:last-child {
+  border-bottom: none;
+}
+
+/* Same hover lift + shadow as the home Notice/News cards. */
+.pub-entry:hover {
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-3px);
+  z-index: 1;
+}
+
+.pub-entry h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.pub-entry h5, .pub-entry h6 {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 0.25rem;
+}
+
+.pub-entry.hidden {
+  display: none;
+}
+
+/* Publication filter buttons */
+.pub-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.pub-filter-btn {
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--section-border);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.pub-filter-btn:hover,
+.pub-filter-btn.active {
+  background-color: var(--color-accent-blue);
+  color: #fff;
+  border-color: var(--color-accent-blue);
+}
+
+/* ===== Pic Page ===== */
+#picid img {
+  margin: 6px 3px 40px 6px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== News ===== */
+#newsid p {
+  text-align: left;
+}
+
+#newsid img {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+/* ===== Figcaption ===== */
+figcaption {
+  text-align: right;
+  margin-top: -16px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* ===== Custom elements ===== */
+pubtit {
+  font-weight: bold;
+}
+
+p.byline {
+  text-align: center;
+  font-size: 1.1rem;
+  line-height: 2;
+  margin-top: -1.5rem;
+  margin-bottom: 3rem;
+}
+
+/* ===== Blockquote as Notice ===== */
+blockquote {
+  border-left: 4px solid var(--color-accent-blue);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  background-color: var(--pub-highlight-bg);
+  margin: 1.5rem 0;
+}
+
+/* ===== Horizontal Rule ===== */
+hr {
+  border-color: var(--section-border);
+  opacity: 0.5;
+}
+
+/* ===== Search Results ===== */
+.search-result-item {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.search-result-item:hover {
+  background-color: var(--pub-highlight-bg);
+}
+
+.search-result-item .result-type {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.search-result-item .result-title {
+  font-weight: 500;
+  margin-bottom: 0.15rem;
+}
+
+.search-result-item .result-detail {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* ===== Notice text (replaces inline font-size) ===== */
+.notice-text {
+  font-size: 1.05rem;
+}
+
+.notice-text-sm {
+  font-size: 0.92rem;
+}
+
+.intern-text {
+  font-size: 1.05rem;
+}
+
+/* ===== Member card ===== */
+.member-card {
+  max-width: 100%;
+}
+
+.member-card .member-name {
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.member-card .member-role {
+  font-size: 1.05rem;
+}
+
+/* Email row (the unclassed <span> after .member-role in team.md). The
+   email is the most width-constrained element in the card, so let it
+   scale with the viewport: full size on wide screens, smoothly down
+   to ~0.72rem when the card gets narrow. */
+.member-card > span:not([class]) {
+  font-size: clamp(0.72rem, 1.6vw, 1rem);
+}
+
+/* ===== Gallery ===== */
+.gallery-event {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gallery-event h4 {
+  margin-bottom: 1rem;
+}
+
+.gallery-event .carousel {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+  margin-top: 0.5rem;
+}
+
+.gallery-event .carousel-item img {
+  margin: 0 !important;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  width: 100% !important;
+  max-width: 100%;
+  height: 500px;
+  object-fit: contain;
+  object-position: 50% 50%;
+  /* Letterbox fill follows the page background instead of a hard
+     black so the framing blends with both light and dark themes. */
+  background-color: var(--bs-body-bg);
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Gallery slide indicators: dark dots on the light theme (was invisible
+   on white-ish letterbox), inverted to light dots on dark theme.
+   Mirrors the contrast logic used for the home carousel. */
+.gallery-event .carousel-indicators [data-bs-target] {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+[data-bs-theme="dark"] .gallery-event .carousel-indicators [data-bs-target] {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ===== Responsive: Tablet (768px–991px) ===== */
+@media (max-width: 991.98px) {
+  body {
+    padding-top: 66px;
+  }
+
+  /* Mobile/tablet hamburger button: drop Bootstrap's harsh border and
+     instead respond to press with a soft drop shadow + subtle bg tint. */
+  .navbar-toggler {
+    border: none;
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+    /* Tighter horizontal padding so the button (and the focus/active
+       shadow halo that traces it) is ~20% narrower without affecting
+       the icon glyph's bar length. */
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    /* Visually shrink the whole button (icon + padding + halo) to
+       70% in each dimension, anchored at the right so it stays
+       glued to the navbar's right edge. */
+    transform: scale(0.7);
+    transform-origin: right center;
+  }
+
+  .navbar-toggler:focus {
+    box-shadow: 0 1px 5.6px rgba(0, 0, 0, 0.18);
+    outline: 0;
+  }
+
+  .navbar-toggler:active {
+    box-shadow: 0 1px 3.2px rgba(0, 0, 0, 0.22);
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  [data-bs-theme="dark"] .navbar-toggler:active {
+    background-color: rgba(255, 255, 255, 0.07);
+  }
+
+  /* In the collapsed mobile menu, .nav-link defaults to display:block
+     and stretches to the row width, so the hover underline ended up
+     spanning the whole row. Shrink it to its text width (left-aligned
+     as before) so the underline only sits below "Home" / "Research" / etc. */
+  #main-navbar .navbar-nav .nav-link {
+    display: inline-block;
+  }
+
+  .gallery-event .carousel-item img {
+    height: 400px;
+  }
+
+  .member-card {
+    max-width: 200px;
+  }
+}
+
+/* ===== Responsive: Mobile (< 768px) ===== */
+@media (max-width: 767.98px) {
+  body {
+    padding-top: 60px;
+    /* Tighter editorial typography on phones only — desktop keeps
+       the looser 1.7 line-height for better long-form readability. */
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+
+  .main-content {
+    padding-top: 1rem;
+  }
+
+  /* Mobile main-title sizing + breathing room from the navbar.
+     The first-child selector catches the page title on home, research,
+     members, publications, gallery, and contact. The professor page
+     (jaeho) buries its h4 inside nested .row/.col divs, so it doesn't
+     match this rule and stays at its original tight position. */
+  #homeid h1,
+  .main-content > .row > .col-12 > h1:first-child,
+  .main-content > .row > .col-12 > h2:first-child {
+    font-size: 1.35rem;
+    margin-top: 0.5em;
+  }
+
+  .carousel {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 8px;
+  }
+
+  .notice-text {
+    font-size: 0.95rem;
+  }
+
+  .notice-text-sm {
+    font-size: 0.85rem;
+  }
+
+  .intern-text {
+    font-size: 0.95rem;
+  }
+
+  .member-card {
+    max-width: 100%;
+  }
+
+  .member-card .member-name {
+    font-size: 1.05rem;
+  }
+
+  .member-card .member-role {
+    font-size: 0.95rem;
+  }
+
+  #gridid img {
+    margin: 8px 10px 4px 0;
+  }
+
+  .pub-filters {
+    margin-bottom: 1rem;
+  }
+
+  /* Mobile pub entry: slightly tighter padding, lighter title weight,
+     and a subtle indent on the venue/author lines so the entry reads
+     as a paragraph instead of three bold-ish stacked lines. */
+  .pub-entry {
+    padding: 0.75rem 0.5rem;
+    margin: 0 -0.5rem;
+  }
+
+  .pub-entry h4 {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .pub-entry h5,
+  .pub-entry h6,
+  .pub-entry em {
+    padding-left: 0.5rem;
+  }
+
+  /* Long emails on member cards wrap to next line instead of
+     overflowing the card on narrow screens. */
+  .member-card {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .gallery-event .carousel-item img {
+    height: 250px;
+  }
+
+  .gallery-event {
+    max-width: 100%;
+  }
+
+  blockquote {
+    padding: 1rem;
+  }
+}
+
+/* Easter-egg hearts that rain when the professor's name is clicked 5x.
+   Driven by js/easter-egg.js, which sets per-instance left/font-size/
+   duration inline. */
+.easter-heart {
+  position: fixed;
+  top: -2.5rem;
+  color: #ff3b6e;
+  pointer-events: none;
+  z-index: 9999;
+  user-select: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  animation-name: easter-heart-fall;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes easter-heart-fall {
+  0%   { transform: translateY(0)     rotate(0deg);   opacity: 0.9; }
+  90%  { opacity: 0.9; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0;   }
+}
+
+/* ===== Badge overrides ===== */
+.badge {
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+/* Oral-badge easter egg: clicking the publication "Oral" badge 3
+   times runs a wobble → shrink → swap (Oral ⇄ 🐤) → grow → wobble
+   sequence. State lives only in the DOM, so a refresh resets the
+   count. The page-load wobble is also half the brand-wobble amplitude
+   so the badges greet the visitor with a small jiggle. */
+.badge.bg-warning {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.badge.bg-warning.badge-shrink {
+  transform: scale(0);
+}
+
+.badge.bg-warning.oral-wobble {
+  /* Reuse the brand-wobble keyframes directly so the Oral badge
+     jiggles at the same amplitude as the navbar brand. */
+  animation: brand-wobble 1.6s ease-in-out 1;
+  transform-origin: center bottom;
+}
+
+/* Research page hero image: extend the image's visible white area
+   upward with a white top border. This adds breathing room *inside*
+   the image frame (preserving the existing border-radius and the
+   gap between the heading and the image). */
+#textid > p:first-of-type > img {
+  border-top: 1em solid #fff;
+}
+
+/* Research page: hover lift on each agenda block (3 sections under
+   "Research Agenda"). Each block is wrapped in <div class="research-block">
+   in research.md. */
+.research-block {
+  padding: 1rem 1rem;
+  margin: 1rem -1rem;
+  border-radius: 10px;
+  position: relative;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.research-block:hover {
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-3px);
+}
+
+/* Member role badges (scoped to .member-card so publication "Top Conf."
+   badges and other site-wide bg-primary usages stay untouched).
+   - bg-primary (Professor / Postdoc Fellow) → darkest brand blue
+   - bg-info    (PhD / MS students)          → brand sky blue
+   - bg-secondary (undergrad / visitor)      → keep Bootstrap gray */
+.member-card .badge.bg-primary {
+  background-color: var(--key-blue-1) !important;
+}
+
+.member-card .badge.bg-info {
+  background-color: var(--key-blue-2) !important;
+  color: #fff !important;
+}
